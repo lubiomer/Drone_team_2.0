@@ -39,6 +39,24 @@ export const authAPI = createApi({
         } catch (error) {}
       },
     }),
+    adminLoginUser: builder.mutation<{ accessToken: string; userData: any, status: string }, LoginUserRequest>({
+      query(data) {
+        return {
+          url: '/auth/admin/login',
+          method: 'POST',
+          body: data,
+          credentials: 'include',
+        };
+      },
+      async onQueryStarted(_args, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          setToken(data.accessToken);
+          setUserData(JSON.stringify(data.userData));
+          await dispatch(getMeAPI.endpoints.getMe.initiate(null));
+        } catch (error) {}
+      },
+    }),
     logoutUser: builder.mutation<void, void>({
       query() {
         return {
@@ -46,7 +64,7 @@ export const authAPI = createApi({
           credentials: 'include',
         };
       },
-      async onQueryStarted(args, { dispatch, queryFulfilled }) {
+      async onQueryStarted(_args, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
           removeToken();
@@ -64,4 +82,5 @@ export const {
   useLoginUserMutation,
   useRegisterUserMutation,
   useLogoutUserMutation,
+  useAdminLoginUserMutation,
 } = authAPI;

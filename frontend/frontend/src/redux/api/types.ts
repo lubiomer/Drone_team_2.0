@@ -52,3 +52,33 @@ export interface WeatherData {
     wind: WeatherWind;
     weather: WeatherDescription[];
 }
+
+export interface TokenResponse {
+    accessToken?: string;
+}
+
+export interface RefreshResult {
+    accessToken: string;
+    userData: any;
+}
+
+export interface IProductRequest {
+    name: string;
+    detail: string;
+    stock: number;
+    price: number;
+    productImg: string;
+}
+
+export interface IProductResponse {
+    _id: string;
+    name: string;
+    detail: string;
+    stock: number;
+    price: number;
+    productImg: string;
+    user: IUser;
+    createdAt: string;
+    updated_at: string;
+}
+
