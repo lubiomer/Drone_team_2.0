@@ -3,16 +3,14 @@
 import { Form, Label, Button, Container } from 'reactstrap';
 import { LoginUserRequest } from '../../redux/api/types';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import classnames from 'classnames';
-import { useLoginUserMutation } from '../../redux/api/authAPI';
+import { useAdminLoginUserMutation } from '../../redux/api/authAPI';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { getGoogleUrl, getHomeRouteForLoggedInUser, getUserData } from '../../utils/Utils';
-import googleImg from '../../assets/images/google.svg';
-import facebookImg from '../../assets/images/facebook.png';
+import { getHomeRouteForLoggedInUser, getUserData } from '../../utils/Utils';
 
-const Login = () => {
+const AdminLogin = () => {
     const {
         register,
         handleSubmit,
@@ -20,16 +18,14 @@ const Login = () => {
     } = useForm<LoginUserRequest>();
 
     const navigate = useNavigate();
-    const location = useLocation();
 
     // 👇 API Login Mutation
-    const [loginUser, { isLoading, isError, error, isSuccess }] = useLoginUserMutation();
-    const from = ((location.state as any)?.from.pathname as string) || '/';
+    const [adminLoginUser, { isLoading, isError, error, isSuccess }] = useAdminLoginUserMutation();
     
     useEffect(() => {
         if (isSuccess) {
             const user = getUserData();
-            toast.success('You successfully logged in');
+            toast.success('Admin successfully logged in');
             
             navigate(getHomeRouteForLoggedInUser(user.role))
         }
@@ -52,7 +48,7 @@ const Login = () => {
 
     const onSubmit: SubmitHandler<LoginUserRequest> = (data) => {
         console.log(data)
-        loginUser(data);
+        adminLoginUser(data);
     };
 
     return (
@@ -84,29 +80,7 @@ const Login = () => {
                             <Button color="orange" className="btn-block" type="submit">
                                 Submit
                             </Button>
-                        </div>
-                        <div className="text-separator">Or</div>
-                        <div className="mt-3 text-center">
-                            <a href={getGoogleUrl(from)} className='btn btn-gray d-flex align-items-center justify-content-center'>
-                                <img className='mx-2' src={googleImg} style={{ height: '25px' }} alt='google' />
-                                Continue with Google
-                            </a>
-                        </div>
-                        <div className="mt-3 text-center">
-                            <a href="#" className='btn btn-water d-flex align-items-center justify-content-center'>
-                                <img className='mx-2' src={facebookImg} style={{ height: '25px' }} alt='google' />
-                                Continue with Facebook
-                            </a>
-                        </div>
-                        <div className="mt-3 text-center">
-                            <p>
-                                New to our platform?
-                                <Link to="/register" className="primary-link mx-2">
-                                    <span>Create an account</span>
-                                </Link>{' '}
-                            </p>
-                        </div>
-                        
+                        </div>  
                     </Form>
                 </div>
             </Container>
@@ -114,4 +88,4 @@ const Login = () => {
     )
 }
 
-export default Login;
+export default AdminLogin;

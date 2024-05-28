@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { IUser } from './types';
 
 interface UserState {
-  user: any | null;
+  user: IUser | null;
 }
 
 const item = localStorage.getItem('userData');
@@ -17,7 +18,7 @@ export const userSlice = createSlice({
     logout: (state) => {
       state.user = null;
     },
-    setUser: (state, action: PayloadAction<any | null>) => {
+    setUser: (state, action: PayloadAction<IUser | null>) => {
       state.user = action.payload;
     }
   }

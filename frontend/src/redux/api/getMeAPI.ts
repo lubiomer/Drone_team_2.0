@@ -11,12 +11,12 @@ export const getMeAPI = createApi({
         getMe: builder.query<IUser, null>({
             query() {
                 return {
-                    url: "/users/peronal/me",
+                    url: "/users/personal/me",
                     credentials: "include",
                 };
             },
-            transformResponse: (result: { data: { user: IUser } }) =>
-                result.data.user,
+            transformResponse: (result: {  user: IUser }) =>
+                result.user,
             async onQueryStarted(_args, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
