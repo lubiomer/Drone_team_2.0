@@ -24,6 +24,7 @@ mongoose.connect(process.env.MONGO_URL)
 
 // Import routes
 const authRoute = require('./routes/auth');
+const userRoute = require('./routes/users');
 
 // increase parse limit
 app.use(bodyParser.json({ limit: '50mb', extended: true }));
@@ -48,5 +49,6 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/auth', authRoute);
+app.use('/api/users', userRoute);
 
 app.listen(PORT, () => console.log(`🛺  API Server UP and Running at ${process.env.SERVER_URL}`));
