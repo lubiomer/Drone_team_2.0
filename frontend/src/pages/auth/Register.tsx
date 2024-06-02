@@ -23,7 +23,6 @@ const Register = () => {
         }
 
         if (isError) {
-            console.log(Array.isArray((error as any).data.error))
             if (Array.isArray((error as any).data.error)) {
                 (error as any).data.error.forEach((el: any) =>
                     toast.error(el.message, {
@@ -31,7 +30,8 @@ const Register = () => {
                     })
                 );
             } else {
-                toast.error((error as any).data, {
+                const errorMsg = (error as any).data && (error as any).data.message ? (error as any).data.message : (error as any).data;
+                toast.error(errorMsg, {
                     position: 'top-right',
                 });
             }
