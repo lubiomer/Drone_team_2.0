@@ -3,14 +3,7 @@
 import {
     Badge,
     Button,
-    Card,
-    CardBody,
-    Col,
     Container,
-    Input,
-    InputGroup,
-    InputGroupText,
-    Row,
     UncontrolledDropdown,
     DropdownToggle,
     DropdownMenu,
@@ -21,45 +14,46 @@ import {
     ModalFooter
 } from 'reactstrap';
 import { toast } from 'react-toastify';
-import { ChevronDown, MoreVertical, Edit, Search, Trash2 } from 'react-feather';
+import { ChevronDown, MoreVertical, Edit, Trash2 } from 'react-feather';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
 import { IUser } from '../../redux/api/types';
-import { useGetUsersQuery } from '../../redux/api/userAPI';
+import { useDeleteUserMutation, useGetUsersQuery } from '../../redux/api/userAPI';
 
 const Users = () => {
     const paginationRowsPerPageOptions = [15, 30, 50, 100];
     const navigate = useNavigate();
     const [modalVisibility, setModalVisibility] = useState(false);
-    const { data: users, isError, isSuccess, error, isLoading, refetch } = useGetUsersQuery();
-    // const [deleteUser] = useDeleteUserMutation();
+    const { data: users, refetch } = useGetUsersQuery();
+    const [deleteUser, { isLoading, isError, error, isSuccess }] = useDeleteUserMutation();
 
     useEffect(() => {
         refetch()
-    }, [])
-    // useEffect(() => {
-    //     if (isSuccess) {
-    //         toast.success('User deleted successfully');
-    //         navigate('/admin/users');
-    //     }
-    //     if (isError) {
-    //         if (Array.isArray((error as any).data.error)) {
-    //             (error as any).data.error.forEach((el: any) =>
-    //                 toast.error(el.message, {
-    //                     position: 'top-right',
-    //                 })
-    //             );
-    //         } else {
-    //             const errorMsg = (error as any).data && (error as any).data.message ? (error as any).data.message : (error as any).data;
-    //             toast.error(errorMsg, {
-    //                 position: 'top-right',
-    //             });
-    //         }
-    //     }
-    // }, [isLoading]);
+    }, []);
+    
+    useEffect(() => {
+        if (isSuccess) {
+            toast.success('User deleted successfully');
+            navigate('/admin/users');
+        }
+        if (isError) {
+            if (Array.isArray((error as any).data.error)) {
+                (error as any).data.error.forEach((el: any) =>
+                    toast.error(el.message, {
+                        position: 'top-right',
+                    })
+                );
+            } else {
+                const errorMsg = (error as any).data && (error as any).data.message ? (error as any).data.message : (error as any).data;
+                toast.error(errorMsg, {
+                    position: 'top-right',
+                });
+            }
+        }
+    }, [isLoading]);
     const handleDeleteUser = (id: string) => {
-        // deleteUser(id);
+        deleteUser(id);
         setModalVisibility(false);
     };
 
@@ -161,11 +155,6 @@ const Users = () => {
     return (
         <div className="main-view drone-background">
             <Container>
-                <Row className="mb-3">
-                    <Col>
-                        <a href="/admin/create-user" className="btn btn-primary">Create User</a>
-                    </Col>
-                </Row>
                 <DataTable
                     title="Users"
                     data={users as IUser[]}

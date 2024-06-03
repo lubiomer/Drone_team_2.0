@@ -1,18 +1,9 @@
-<<<<<<< HEAD
-=======
 /* eslint-disable react-hooks/exhaustive-deps */
->>>>>>> origin/main
 import { Button, Card, CardBody, CardHeader, Col, Container, Form, Label, Row } from "reactstrap";
 import { useForm, SubmitHandler } from 'react-hook-form';
 import classnames from 'classnames';
 import { IProductRequest } from "../../redux/api/types";
 import uploadImg from "../../assets/images/drone.jpg";
-<<<<<<< HEAD
-import { useState } from "react";
-
-const AdminProductCreate = () => {
-    const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
-=======
 import { useEffect, useState } from "react";
 import { toast } from 'react-toastify';
 import { useCreateProductMutation, useUploadProductImgMutation } from "../../redux/api/productAPI";
@@ -22,34 +13,12 @@ const AdminProductCreate = () => {
     const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
     const [productFile, setProductFile] = useState<string | null>(null);
     const navigate = useNavigate();
->>>>>>> origin/main
     const {
         register,
         handleSubmit,
         formState: { errors }
     } = useForm<IProductRequest>();
 
-<<<<<<< HEAD
-    const onSubmit: SubmitHandler<IProductRequest> = (data) => {
-        console.log(data);
-    };
-
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        e.preventDefault();
-
-        if (e.target.files) {
-            let reader = new FileReader();
-            let file = e.target.files[0];
-
-            reader.onloadend = () => {
-                setImagePreviewUrl(reader.result as string);
-            };
-
-            reader.readAsDataURL(file);
-        }
-    };
-
-=======
     const [uploadProductImg] = useUploadProductImgMutation();
     const [createProduct, { isLoading, isSuccess, error, isError, data }] = useCreateProductMutation();
 
@@ -118,7 +87,6 @@ const AdminProductCreate = () => {
     };
 
 
->>>>>>> origin/main
     return (
         <div className="main-view drone-background">
             <Container>
@@ -167,20 +135,11 @@ const AdminProductCreate = () => {
                                             </div>
                                             <div className='mb-2'>
                                                 <Label>Product Detail</Label>
-<<<<<<< HEAD
-                                                <input
-                                                    className={`form-control ${classnames({ 'is-invalid': errors.detail })}`}
-                                                    type="text"
-                                                    id="password"
-                                                    {...register('detail', { required: true })}
-                                                />
-=======
                                                 <textarea
                                                     className={`form-control ${classnames({ 'is-invalid': errors.detail })}`}
                                                     id="password"
                                                     {...register('detail', { required: true })}
                                                 ></textarea>
->>>>>>> origin/main
                                                 {errors.detail && <small className="text-danger">Product Detail is required.</small>}
                                             </div>
                                             <div className='mb-2'>

@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-import { Container, Row, Col } from 'reactstrap';
-
-const AdminShop = () => {
-=======
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Key, useEffect, useState } from 'react';
 import { Container, Row, Col, Pagination, PaginationItem, PaginationLink } from 'reactstrap';
@@ -53,7 +48,6 @@ const AdminShop = () => {
         }
     };
 
->>>>>>> origin/main
     return (
         <div className="main-view drone-background">
             <Container>
@@ -62,12 +56,6 @@ const AdminShop = () => {
                         <a href="/admin/shop/create-product" className="btn btn-primary">Create Product</a>
                     </Col>
                 </Row>
-<<<<<<< HEAD
-                <Row>
-                    <Col md="12">
-                        
-                    </Col>
-=======
                 <Row className='my-3'>
                     {isLoading ? (<FullScreenLoader />) :
                         <>
@@ -112,7 +100,6 @@ const AdminShop = () => {
                             </Pagination>
                         </>
                     }
->>>>>>> origin/main
                 </Row>
             </Container>
         </div>
