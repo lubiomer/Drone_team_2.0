@@ -15,6 +15,7 @@ export const setToken = (val: string): void => {
     localStorage.setItem('accessToken', val);
 };
 
+
 export const setUserData = (val: string) => {
     localStorage.setItem('userData', val);
 };
@@ -78,3 +79,5 @@ export const getFacebookUrl = (from: string) => {
 
     return `${rootUrl}?${qs.toString()}`;
 };
+
+
