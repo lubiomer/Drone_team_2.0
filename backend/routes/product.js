@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { Product } = require('../models/Product');
-const { uuid } = require('../../../../OneDrive/שולחן העבודה/תואר מדעי המחשב/ו. תואר במדעי המחשב - שנה ג - סמסטר ב/ג. פיתוח אפליקציות מתקדם/ב. מטלות/drone-typescript-node-mongodb-v8/drone-typescript-node-mongodb-v9/backend/util/utils');
-const verifyToken = require('../../../../OneDrive/שולחן העבודה/תואר מדעי המחשב/ו. תואר במדעי המחשב - שנה ג - סמסטר ב/ג. פיתוח אפליקציות מתקדם/ב. מטלות/drone-typescript-node-mongodb-v8/drone-typescript-node-mongodb-v9/backend/util/verifyToken');
+const { uuid } = require('../util/utils');
+const verifyToken = require('../util/verifyToken');
 const multer = require("multer");
 const mongoose = require('mongoose');
 

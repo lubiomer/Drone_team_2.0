@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { Cart } = require('../models/Cart');
 const { Order } = require('../models/Order');
 const { Product } = require('../models/Product');
-const verifyToken = require('../../../../OneDrive/שולחן העבודה/תואר מדעי המחשב/ו. תואר במדעי המחשב - שנה ג - סמסטר ב/ג. פיתוח אפליקציות מתקדם/ב. מטלות/drone-typescript-node-mongodb-v8/drone-typescript-node-mongodb-v9/backend/util/verifyToken');
+const verifyToken = require('../util/verifyToken');
 const { ObjectId } = require('mongodb');
 
 /**
