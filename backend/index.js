@@ -27,6 +27,7 @@ mongoose.connect(process.env.MONGO_URL)
 
 // Import routes
 const authRoute = require('./routes/auth');
+const oauthRoute = require('./routes/oauth');
 const userRoute = require('./routes/users');
 const supportRoute = require('./routes/support');
 const productRoute = require('./routes/product');
@@ -57,6 +58,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/auth', authRoute);
+app.use('/api/oauth', oauthRoute);
 app.use('/api/users', userRoute);
 app.use('/api/support', supportRoute);
 app.use('/api/products', productRoute);
