@@ -5,7 +5,6 @@ import { Container, Row, Col } from 'reactstrap';
 import FullScreenLoader from '../components/FullScreenLoader';
 import { WeatherData } from '../redux/api/types';
 
-
 const Explore = () => {
     const [weather, setWeather] = useState<WeatherData | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
