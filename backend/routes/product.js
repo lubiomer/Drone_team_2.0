@@ -334,4 +334,40 @@ router.get('/getProduct/:id', verifyToken(['admin', 'user']), async (req, res) =
     return res.send(product);
 });
 
+/**
+ * @swagger
+ * /api/products/getDashboard:
+ *   get:
+ *     tags:
+ *       - Product
+ *     summary: Retrieve a list of top 3 products
+ *     description: Get a short list of the top 3 products for the dashboard.
+ *     responses:
+ *       200:
+ *         description: A list of products.
+ *       500:
+ *         description: Error fetching dashboard data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Error fetching dashboard data
+ */
+router.get('/getDashboard', async (req, res) => {
+    try {
+        const products = await Product.find().limit(3);
+        return res.send(products);
+    } catch (error) {
+        // Log the error for debugging purposes
+        console.error('Error fetching dashboard data:', error);
+
+        // Send an appropriate HTTP response indicating server error
+        return res.status(500).send({ message: 'Error fetching dashboard data' });
+    }
+});
+
+
 module.exports = router;

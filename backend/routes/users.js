@@ -1,6 +1,26 @@
 const router = require('express').Router();
 const User = require("../models/User");
+const { uuid } = require('../util/utils');
 const verifyToken = require('../util/verifyToken');
+const multer = require("multer");
+const { ObjectId } = require("mongodb");
+
+const multerStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, `public/img/profiles`);
+    },
+    filename: (req, file, cb) => {
+        const ext = file.mimetype.split('/')[1];
+        const filename = `profile-${uuid()}-${Date.now()}.${ext}`;
+        cb(null, filename);
+    }
+});
+
+const uploadProfile = multer({
+    storage: multerStorage,
+    limits: { fileSize: 1024 * 1024 * 5, files: 1 },
+});
+
 
 /**
  * @openapi
@@ -24,8 +44,8 @@ router.get('/', verifyToken(['admin', 'user']), async (req, res) => {
         $and: [
             {
                 $or: [
-                    { firstName: { $regex: searchQuery, $options: 'i' } },
-                    { lastName: { $regex: searchQuery, $options: 'i' } },
+                    { firstname: { $regex: searchQuery, $options: 'i' } },
+                    { lastname: { $regex: searchQuery, $options: 'i' } },
                     { email: { $regex: searchQuery, $options: 'i' } },
                 ],
             },
@@ -169,5 +189,251 @@ router.delete('/delete/:id', verifyToken(['admin']), async (req, res) => {
     return res.send({ message: 'User successfully deleted!' });
 });
 
+/**
+ * @openapi
+ * /api/users/update/profile:
+ *   put:
+ *     summary: Update a user's details
+ *     description: Allows updating of a user's username, first name, last name, and email. Access requires 'admin' or 'user' role.
+ *     tags:
+ *       - User
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               firstname:
+ *                 type: string
+ *               lastname:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *             example:
+ *               username: johndoe
+ *               firstname: John
+ *               lastname: Doe
+ *               email: johndoe@example.com
+ *     responses:
+ *       200:
+ *         description: User successfully updated.
+ *       400:
+ *         description: Bad Request, invalid input data or duplicated username.
+ *       401:
+ *         description: Unauthorized access, invalid or missing token.
+ *       403:
+ *         description: Forbidden action, insufficient permissions.
+ *       404:
+ *         description: User not found with the given ID.
+ *       500:
+ *         description: An unexpected error occurred.
+ */
+
+router.put('/update/profile', verifyToken(['admin', 'user']), async (req, res) => {
+    try {
+        const updateValues = req.body;
+        const updatedUser = await User.findOneAndUpdate({ _id: req.user._id }, updateValues, {
+            new: true,
+        }).select('-__v');
+
+        if (!updatedUser) {
+            return res.status(404).send({ message: 'User not found' });
+        }
+
+        return res.send({ updatedUser: updatedUser, message: 'User successfully updated' });
+    } catch (error) {
+        if (error.code === 11000) {
+            return res.status(400).send({ message: 'Duplicated username, there is already an existing username' });
+        }
+        return res.status(500).send({ message: error.message || 'An unexpected error occurred' });
+    }
+});
+
+/**
+ * @openapi
+ * /api/users/getProfile:
+ *   get:
+ *     summary: Retrieve the profile of the currently logged-in user
+ *     description: Returns the user's profile information along with associated orders, carts, and last flight details. Access requires 'admin' or 'user' role.
+ *     tags:
+ *       - User
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User profile retrieved successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                 username:
+ *                   type: string
+ *                 firstname:
+ *                   type: string
+ *                 lastname:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 role:
+ *                   type: string
+ *                 orders:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                       quantity:
+ *                         type: integer
+ *                       totalPrice:
+ *                         type: number
+ *                       cart:
+ *                         type: boolean
+ *                       user:
+ *                         type: string
+ *                       products:
+ *                         type: array
+ *                 carts:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       count:
+ *                         type: integer
+ *                 lastFlight:
+ *                   type: array
+ *       401:
+ *         description: Unauthorized access, invalid or missing token.
+ *       500:
+ *         description: An unexpected error occurred.
+ */
+
+router.get('/getProfile', verifyToken(['admin', 'user']), async (req, res) => {
+    try {
+        const user = await User.aggregate(
+            [
+                { $match: { _id: new ObjectId(req.user._id) }},
+                {
+                    $lookup: {
+                        from: 'orders',
+                        localField: '_id',
+                        foreignField: 'user',
+                        pipeline: [
+                            {
+                                $lookup: {
+                                    from: 'products',
+                                    localField: 'product',
+                                    foreignField: '_id',
+                                    as: 'products',
+                                }, 
+                            },
+                            {
+                                $project: {
+                                    _id: 1,
+                                    quantity: 1,
+                                    totalPrice: 1,
+                                    cart: 1,
+                                    user: 1,
+                                    products:1,
+                                }, 
+                            }
+                        ],
+                        as: 'orders',
+                    },
+                },
+                {
+                    $sort: { 'orders.createdAt': -1 } 
+                },
+                {
+                    $lookup: {
+                        from: 'carts',
+                        localField: '_id',
+                        foreignField: 'user',
+                        pipeline: [
+                            { $match: { status: { $ne: 'deleted'} } }, 
+                            { $group: { _id: null, count: { $sum: 1 } } },
+                        ],
+                        as: 'carts',
+                    },     
+                },
+                {
+                    $lookup: {
+                        from: 'flights',
+                        localField: '_id',
+                        foreignField: 'user',
+                        pipeline: [
+                            { $match: { user: new ObjectId(req.user._id) } }, 
+                            { $sort: { 'flights.createdAt': -1 }  },
+                            { $limit: 1 }
+                        ],
+                        as: 'lastFlight',
+                    },     
+                },
+                {
+                    $project: {
+                        _id: 1,
+                        username: 1,
+                        firstname: 1,
+                        lastname: 1,
+                        email: 1,
+                        role: 1,
+                        orders: 1,
+                        carts: 1,
+                        lastFlight: 1
+                    }, 
+                }
+            ]
+        );
+        return res.send(user[0]);
+    } catch (error) {
+        return res.status(500).send({ message: error.message });
+    }
+});
+
+/**
+ * @openapi
+ * /api/users/upload/avatarFile:
+ *   put:
+ *     summary: Upload and update user's avatar.
+ *     description: Allows users to upload a new avatar image. The server stores the image and updates user's profile with the new avatar URL.
+ *     tags:
+ *       - User
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               avatarFile:
+ *                 type: string
+ *                 format: binary
+ *                 description: The avatar image file to upload.
+ *     responses:
+ *       200:
+ *         description: Avatar updated successfully.
+ *       400:
+ *         description: Bad request, if the file is not provided or invalid.
+ *       401:
+ *         description: Unauthorized access, invalid or missing token.
+ *       500:
+ *         description: An unexpected error occurred.
+ */
+
+router.put('/upload/avatarFile', uploadProfile.single('avatarFile'), verifyToken(['admin', 'user']), async (req, res) => {
+    const imageUri = process.env.SERVER_URL + '/' + req.file.path.replace(/\\/g, '/').replace('public/', '');
+    const updateAvatar = await User.findOneAndUpdate({ _id: req.user._id }, { avatar: imageUri }, { new: true }).select('-password -__v');
+
+    return res.send({ updateAvatar: updateAvatar })
+});
 
 module.exports = router;
