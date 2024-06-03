@@ -1,57 +1,51 @@
-<<<<<<< HEAD
-=======
 /* eslint-disable react-hooks/exhaustive-deps */
->>>>>>> origin/main
 import { Button, Card, CardBody, CardHeader, Col, Container, Form, Label, Row } from "reactstrap";
 import { useForm, SubmitHandler } from 'react-hook-form';
 import classnames from 'classnames';
 import { IProductRequest } from "../../redux/api/types";
 import uploadImg from "../../assets/images/drone.jpg";
-<<<<<<< HEAD
-import { useState } from "react";
-
-const AdminProductCreate = () => {
-    const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
-=======
 import { useEffect, useState } from "react";
 import { toast } from 'react-toastify';
-import { useCreateProductMutation, useUploadProductImgMutation } from "../../redux/api/productAPI";
-import { useNavigate } from "react-router-dom";
+import { useGetProductQuery, useUpdateProductMutation, useUploadProductImgMutation } from "../../redux/api/productAPI";
+import { useNavigate, useParams } from "react-router-dom";
 
-const AdminProductCreate = () => {
+type ProductType = {
+    name: string;
+    detail: string;
+    stock: number;
+    price: number;
+    productImg?: string;
+};
+
+const AdminProductUpdate = () => {
+    const { id } = useParams<{ id: string }>();
+    const { data: product, refetch: refetchProduct } = useGetProductQuery(id);
     const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
     const [productFile, setProductFile] = useState<string | null>(null);
     const navigate = useNavigate();
->>>>>>> origin/main
     const {
         register,
         handleSubmit,
-        formState: { errors }
+        formState: { errors },
+        setValue
     } = useForm<IProductRequest>();
 
-<<<<<<< HEAD
-    const onSubmit: SubmitHandler<IProductRequest> = (data) => {
-        console.log(data);
-    };
-
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        e.preventDefault();
-
-        if (e.target.files) {
-            let reader = new FileReader();
-            let file = e.target.files[0];
-
-            reader.onloadend = () => {
-                setImagePreviewUrl(reader.result as string);
-            };
-
-            reader.readAsDataURL(file);
-        }
-    };
-
-=======
     const [uploadProductImg] = useUploadProductImgMutation();
-    const [createProduct, { isLoading, isSuccess, error, isError, data }] = useCreateProductMutation();
+    const [updateProduct, { isLoading, isSuccess, error, isError, data }] = useUpdateProductMutation();
+
+    useEffect(() => {
+        refetchProduct();
+    }, []);
+
+    useEffect(() => {
+        if (product) {
+            const fields: Array<keyof ProductType> = ['name', 'detail', 'stock', 'price', 'productImg'];
+            fields.forEach((field) => setValue(field, product[field]));
+            if (product.productImg) {
+                setImagePreviewUrl(product.productImg);
+            }
+        }
+    }, [product]);
 
     useEffect(() => {
         if (isSuccess) {
@@ -59,7 +53,7 @@ const AdminProductCreate = () => {
             navigate('/admin/shop');
         }
         if (isError) {
-            
+
             if (Array.isArray((error as any).data.error)) {
                 (error as any).data.error.forEach((el: any) =>
                     toast.error(el.message, {
@@ -79,7 +73,8 @@ const AdminProductCreate = () => {
         if (productFile) {
             data.productImg = productFile;
         }
-        createProduct(data);
+
+        updateProduct({ id: id, product: data });
     };
 
     const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -118,7 +113,6 @@ const AdminProductCreate = () => {
     };
 
 
->>>>>>> origin/main
     return (
         <div className="main-view drone-background">
             <Container>
@@ -126,7 +120,7 @@ const AdminProductCreate = () => {
                     <Col>
                         <Card>
                             <CardHeader>
-                                <h5 className="mb-0 text-light">Create Product</h5>
+                                <h5 className="mb-0 text-light">Update Product</h5>
                             </CardHeader>
                             <CardBody>
                                 <Form onSubmit={handleSubmit(onSubmit)}>
@@ -167,20 +161,11 @@ const AdminProductCreate = () => {
                                             </div>
                                             <div className='mb-2'>
                                                 <Label>Product Detail</Label>
-<<<<<<< HEAD
-                                                <input
-                                                    className={`form-control ${classnames({ 'is-invalid': errors.detail })}`}
-                                                    type="text"
-                                                    id="password"
-                                                    {...register('detail', { required: true })}
-                                                />
-=======
                                                 <textarea
                                                     className={`form-control ${classnames({ 'is-invalid': errors.detail })}`}
                                                     id="password"
                                                     {...register('detail', { required: true })}
                                                 ></textarea>
->>>>>>> origin/main
                                                 {errors.detail && <small className="text-danger">Product Detail is required.</small>}
                                             </div>
                                             <div className='mb-2'>
@@ -221,4 +206,4 @@ const AdminProductCreate = () => {
     )
 }
 
-export default AdminProductCreate;
+export default AdminProductUpdate;
