@@ -20,7 +20,7 @@ const Support = () => {
 
     useEffect(() => {
         if (isSuccess) {
-            toast.success('You successfully logged in');
+            toast.success('Successfully Sent!');
         }
         if (isError) {
 
