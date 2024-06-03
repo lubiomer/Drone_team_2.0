@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { useRegisterUserMutation } from '../../redux/api/authAPI';
 import { useEffect } from 'react';
 
+
 const Register = () => {
     const {
         register,
