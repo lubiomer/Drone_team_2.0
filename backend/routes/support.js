@@ -2,6 +2,7 @@ const router = require('express').Router();
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_APIKEY);
 
+
 /**
  * @openapi
  * /api/support:

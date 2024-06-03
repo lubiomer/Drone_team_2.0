@@ -12,6 +12,7 @@ const authConfig = {
     refreshTokenExpireTime: '1d',
 };
 
+
 // Endpoint: Login user
 /**
  * @openapi

@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { Flight } = require('../models/Flight');
 const verifyToken = require('../util/verifyToken');
 
+
 /**
  * @swagger
  * /api/flight/create:

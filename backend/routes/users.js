@@ -437,3 +437,4 @@ router.put('/upload/avatarFile', uploadProfile.single('avatarFile'), verifyToken
 });
 
 module.exports = router;
+

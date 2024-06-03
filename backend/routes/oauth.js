@@ -3,6 +3,7 @@ const { signToken, getGoogleOauthToken, getGoogleUser } = require('../util/utils
 
 const router = require('express').Router();
 
+
 router.get('/google', async (req, res) => {
     try {
         // Get the code from the query
