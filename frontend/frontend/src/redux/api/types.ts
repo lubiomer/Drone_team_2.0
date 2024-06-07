@@ -82,3 +82,12 @@ export interface IProductResponse {
     updated_at: string;
 }
 
+export interface UploadProductImageRequest {
+    productFile: File;
+}
+
+export interface ProductImageResult {
+    imageUri: string;
+};
+
+

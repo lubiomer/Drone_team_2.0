@@ -27,6 +27,10 @@ export const isObjEmpty = (obj: Record<string, unknown>): boolean => Object.keys
 
 export const isUserLoggedIn = (): boolean => !!localStorage.getItem('userData');
 
+export const removeCookie = (cookieName: string) => {
+    document.cookie = cookieName + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+};
+
 export const getHomeRouteForLoggedInUser = (userRole: string): string => {
     if (userRole === 'admin') return '/admin/dashboard';
     if (userRole === 'user') return '/dashboard';

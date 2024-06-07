@@ -1,31 +1,31 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import defaultFetchBase from './defaultFetchBase';
-import { IProductResponse } from './types';
+import { ProductImageResult, UploadProductImageRequest } from './types';
 
 export const productAPI = createApi({
   reducerPath: 'productAPI',
   baseQuery: defaultFetchBase,
   tagTypes: ['Products'],
   endpoints: (builder) => ({
-    createProduct: builder.mutation<any, FormData>({
+    createProduct: builder.mutation<any, any>({
       query(product) {
         return {
-          url: '/products',
+          url: '/products/create',
           method: 'POST',
           credentials: 'include',
           body: product,
         };
       },
       invalidatesTags: [{ type: 'Products', id: 'LIST' }],
-      transformResponse: (result: { data: { product: any } }) =>
-        result.data.product,
+      transformResponse: (result) =>
+        result,
     }),
-    updateProduct: builder.mutation<any, { id: string; product: FormData }>(
+    updateProduct: builder.mutation<any, any>(
       {
         query({ id, product }) {
           return {
-            url: `/products/${id}`,
-            method: 'PATCH',
+            url: `/products/update/${id}`,
+            method: 'PUT',
             credentials: 'include',
             body: product,
           };
@@ -33,42 +33,43 @@ export const productAPI = createApi({
         invalidatesTags: (result, _error, { id }) =>
           result
             ? [
-                { type: 'Products', id },
-                { type: 'Products', id: 'LIST' },
-              ]
+              { type: 'Products', id },
+              { type: 'Products', id: 'LIST' },
+            ]
             : [{ type: 'Products', id: 'LIST' }],
-        transformResponse: (response: { data: { post: any } }) =>
-          response.data.post,
+        transformResponse: (response) =>
+          response,
       }
     ),
-    getProduct: builder.query<any, string>({
+    getProduct: builder.query<any, any>({
       query(id) {
         return {
-          url: `/products/${id}`,
+          url: `/products/getProduct/${id}`,
           credentials: 'include',
         };
       },
       providesTags: (_result, _error, id) => [{ type: 'Products', id }],
     }),
-    getProducts: builder.query<any[], void>({
-      query() {
+    getProducts: builder.query<any, any>({
+      query(args) {
         return {
           url: `/products`,
+          params: { ...args },
           credentials: 'include',
         };
       },
       providesTags: (result) =>
-        result
+        result?.products
           ? [
-              ...result.map(({ id }) => ({
-                type: 'Products' as const,
-                id,
-              })),
-              { type: 'Products', id: 'LIST' },
-            ]
+            ...result.products.map(({ id } : { id: string }) => ({
+              type: 'Products' as const,
+              id,
+            })),
+            { type: 'Products', id: 'LIST' },
+          ]
           : [{ type: 'Products', id: 'LIST' }],
-      transformResponse: (results: { products: IProductResponse[] } ) =>
-        results.products,
+      transformResponse: (results: any) =>
+        results,
     }),
     deleteProduct: builder.mutation<any, string>({
       query(id) {
@@ -80,6 +81,22 @@ export const productAPI = createApi({
       },
       invalidatesTags: [{ type: 'Products', id: 'LIST' }],
     }),
+    uploadProductImg: builder.mutation<ProductImageResult, UploadProductImageRequest>({
+      query: (uploadProductImageRequest) => {
+        var formData = new FormData();
+        formData.append('productImg', uploadProductImageRequest.productFile);
+        return {
+          url: '/products/upload/productImg',
+          method: 'POST',
+          credentials: 'include',
+          body: formData
+        };
+      },
+      invalidatesTags: [{ type: 'Products', id: 'LIST' }],
+      transformResponse(result: ProductImageResult) {
+        return result;
+      },
+    })
   }),
 });
 
@@ -88,4 +105,6 @@ export const {
   useDeleteProductMutation,
   useUpdateProductMutation,
   useGetProductsQuery,
+  useGetProductQuery,
+  useUploadProductImgMutation,
 } = productAPI;

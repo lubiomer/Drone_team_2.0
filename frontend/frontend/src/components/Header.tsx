@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Collapse, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
 import { RootState, useAppSelector } from "../redux/store";
-import { getToken } from "../utils/Utils";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import userImg from '../assets/images/user.png';
@@ -13,10 +12,15 @@ import { useLogoutUserMutation } from "../redux/api/authAPI";
 const Header = () => {
     const user = useAppSelector((state: RootState) => state.userState.user);
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const accessToken = getToken();
     const [logoutUser, { isLoading, isSuccess, error, isError }] = useLogoutUserMutation();
     const navigate = useNavigate();
     const toggle = () => setIsOpen(!isOpen);
+
+    const mobileToggle = () => {
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            setIsOpen(!isOpen);
+        };
+    };
 
     useEffect(() => {
         if (isSuccess) {
@@ -46,7 +50,7 @@ const Header = () => {
                 <Navbar expand="md">
                     <NavbarBrand
                         href={
-                            accessToken ? user?.role === 'admin' ? '/admin/dashboard' : '/dashboard' : '/'
+                            user ? user?.role === 'admin' ? '/admin/dashboard' : '/dashboard' : '/'
                         }>
                         <img
                             src={logoImg}
@@ -56,11 +60,11 @@ const Header = () => {
                     </NavbarBrand>
                     <NavbarToggler onClick={toggle} className="ms-auto" />
                     <Collapse isOpen={isOpen} navbar>
-                        <Nav className="ms-auto" navbar>
-                            {!accessToken && (
-                                <>
+                        {!user && (
+                            <>
+                                <Nav className="me-auto" navbar>
                                     <NavItem className="nav-item-responsive">
-                                        <NavLink onClick={() => navigate('/shop')}>
+                                        <NavLink onClick={() => { navigate('/shop'); mobileToggle(); }}>
                                             <button className="btn btn-gray">SHOP</button>
                                         </NavLink>
                                     </NavItem>
@@ -74,7 +78,7 @@ const Header = () => {
                                             <button className="btn btn-gray">SUPPORT</button>
                                         </NavLink>
                                     </NavItem>
-
+                                </Nav><Nav className="ms-auto" navbar>
                                     <NavItem className="nav-item-responsive">
                                         <NavLink onClick={() => navigate('/mycart')}>
                                             <img src={cartImg} alt="Cart" className="user-img" />
@@ -89,10 +93,12 @@ const Header = () => {
                                             <DropdownItem onClick={() => navigate('/register')}>SIGN UP</DropdownItem>
                                         </DropdownMenu>
                                     </UncontrolledDropdown>
-                                </>
-                            )}
-                            {accessToken && user?.role === 'user' && (
-                                <>
+                                </Nav>
+                            </>
+                        )}
+                        {user && user?.role === 'user' && (
+                            <>
+                                <Nav className="me-auto" navbar>
                                     <NavItem className="nav-item-responsive">
                                         <NavLink onClick={() => navigate('/shop')}>
                                             <button className="btn btn-gray">SHOP</button>
@@ -123,8 +129,10 @@ const Header = () => {
                                             <button className="btn btn-gray">NEWS</button>
                                         </NavLink>
                                     </NavItem>
+                                </Nav>
+                                <Nav className="ms-auto" navbar>
                                     <NavItem className="nav-item-responsive">
-                                        <NavLink onClick={() => navigate('/')}>
+                                        <NavLink onClick={() => navigate('/mycart')}>
                                             <img src={cartImg} alt="Cart" className="user-img" />
                                         </NavLink>
                                     </NavItem>
@@ -139,11 +147,13 @@ const Header = () => {
                                             <DropdownItem onClick={onLogoutHandler}>SIGN OUT</DropdownItem>
                                         </DropdownMenu>
                                     </UncontrolledDropdown>
-                                </>
-                            )}
-                            {accessToken && user?.role === 'admin' && (
-                                <>
-                                    <NavItem className="nav-item-responsive">
+                                </Nav>
+                            </>
+                        )}
+                        {user && user?.role === 'admin' && (
+                            <>
+                                <Nav className="me-auto" navbar>
+                                <NavItem className="nav-item-responsive">
                                         <NavLink onClick={() => navigate('/admin/shop')}>
                                             <button className="btn btn-gray">SHOP</button>
                                         </NavLink>
@@ -153,18 +163,19 @@ const Header = () => {
                                             <button className="btn btn-gray">USERS</button>
                                         </NavLink>
                                     </NavItem>
-                                    
+                                </Nav>
+                                <Nav className="ms-auto" navbar>
                                     <UncontrolledDropdown nav inNavbar>
                                         <DropdownToggle nav caret>
                                             <img src={userImg} alt="user" className="user-img" />
                                         </DropdownToggle>
                                         <DropdownMenu end>
-                                            <DropdownItem onClick={onLogoutHandler}>Sign out</DropdownItem>
+                                            <DropdownItem onClick={onLogoutHandler}>SIGN OUT</DropdownItem>
                                         </DropdownMenu>
                                     </UncontrolledDropdown>
-                                </>
-                            )}
-                        </Nav>
+                                </Nav>
+                            </>
+                        )}
                     </Collapse>
                 </Navbar>
             </div>

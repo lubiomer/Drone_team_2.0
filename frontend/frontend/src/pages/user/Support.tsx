@@ -1,18 +1,53 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Form, Label, Button, Container, Card, CardBody, CardHeader } from 'reactstrap';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { ContactRequest } from '../../redux/api/types';
 import classnames from 'classnames';
+import { useSupportSendMutation } from '../../redux/api/supportAPI';
+import { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 const Support = () => {
 
     const {
+        reset,
         register,
         handleSubmit,
-        formState: { errors }
+        formState: { errors, isSubmitSuccessful }
     } = useForm<ContactRequest>();
 
+    const [supportSend, { isLoading, isError, error, isSuccess }] = useSupportSendMutation();
+
+    useEffect(() => {
+        if (isSuccess) {
+            toast.success('You successfully logged in');
+        }
+        if (isError) {
+
+            if (Array.isArray((error as any).data.error)) {
+                (error as any).data.error.forEach((el: any) =>
+                    toast.error(el.message, {
+                        position: 'top-right',
+                    })
+                );
+            } else {
+                const errorMsg = (error as any).data && (error as any).data.message ? (error as any).data.message : (error as any).data;
+                toast.error(errorMsg, {
+                    position: 'top-right',
+                });
+            }
+        }
+    }, [isLoading]);
+
+    useEffect(() => {
+        if (isSubmitSuccessful) {
+            reset();
+        }
+    }, [isSubmitSuccessful]);
+
     const onSubmit: SubmitHandler<ContactRequest> = (data) => {
-        console.log(data)
+        console.log(data);
+        supportSend(data);
     };
 
     return (

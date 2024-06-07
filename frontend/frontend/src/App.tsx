@@ -17,6 +17,15 @@ import MyCart from './pages/user/MyCart';
 import Shop from './pages/user/Shop';
 import Purchase from './pages/user/Purchase';
 import LastFlight from './pages/user/LastFlight';
+import ShopItems from './pages/user/ShopItems';
+import Profile from './pages/user/Profile';
+import AdminLogin from './pages/auth/AdminLogin';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import Users from './pages/admin/Users';
+import AdminShop from './pages/admin/AdminShop';
+import AdminProductCreate from './pages/admin/AdminProductCreate';
+import AdminProductUpdate from './pages/admin/AdminProductUpdate';
+import ItemDetail from './pages/user/ItemDetail';
 
 const App = () => {
   const getHomeRoute = () => {
@@ -37,14 +46,25 @@ const App = () => {
           <Route element={<RequireUser allowedRoles={['user']} />}>
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="shop" element={<Shop />} />
+            <Route path="shop/items" element={<ShopItems />} />
+            <Route path="shop/items/:id" element={<ItemDetail />} />
             <Route path="flight" element={<LastFlight />} />
             <Route path="purchase" element={<Purchase />} />
             <Route path="mycart" element={<MyCart />} />
             <Route path="news" element={<News />} />
+            <Route path="profile" element={<Profile />} />
+          </Route>
+          <Route element={<RequireUser allowedRoles={['admin']} />}>
+            <Route path="admin/dashboard" element={<AdminDashboard />} />
+            <Route path="admin/users" element={<Users />} />
+            <Route path="admin/shop" element={<AdminShop />} />
+            <Route path="admin/shop/create-product" element={<AdminProductCreate />} />
+            <Route path="admin/shop/:id" element={<AdminProductUpdate />} />
           </Route>
           <Route path="support" element={<Support />} />
           <Route path="explore" element={<Explore />} />
           <Route path="login" element={<Login />} />
+          <Route path="admin/login" element={<AdminLogin />} />
           <Route path="register" element={<Register />} />
         </Route>
       </Routes>

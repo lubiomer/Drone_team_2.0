@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/aria-query": "^5.0.4",
     "@types/jest": "^27.5.2",
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^16.18.96",
     "@types/react": "^18.2.75",
     "@types/react-dom": "^18.2.24",
@@ -19,6 +20,8 @@
     "classnames": "^2.5.1",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
+    "react-cookie": "^7.1.4",
+    "react-data-table-component": "^7.6.2",
     "react-dom": "^18.2.0",
     "react-feather": "^2.0.10",
     "react-hook-form": "^7.51.2",
@@ -32,7 +35,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "set PORT=8000 && react-scripts start",
+    "start": "set PORT=7000 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
