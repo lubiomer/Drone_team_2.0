@@ -4,6 +4,7 @@ const userSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
+        unique: true,
     },
     firstname: {
         type: String,
@@ -29,6 +30,19 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ['admin', 'user'],
         required: true,
+    },
+    provider: {
+        type: String,
+        enum: ['Google', 'Username'],
+        default: 'Username',
+    },
+    verified: {
+        type: Boolean,
+        default: false,
+    },
+    avatar: {
+        type: String,
+        default: '',
     },
     lastLogin: {
         type: Date,

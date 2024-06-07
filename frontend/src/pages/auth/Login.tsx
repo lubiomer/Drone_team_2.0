@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { Form, Label, Button, Container } from 'reactstrap';
 import { LoginUserRequest } from '../../redux/api/types';
@@ -33,6 +34,7 @@ const Login = () => {
             navigate(getHomeRouteForLoggedInUser(user.role))
         }
         if (isError) {
+            
             if (Array.isArray((error as any).data.error)) {
                 (error as any).data.error.forEach((el: any) =>
                     toast.error(el.message, {
@@ -40,12 +42,12 @@ const Login = () => {
                     })
                 );
             } else {
-                toast.error((error as any).data.message, {
+                const errorMsg = (error as any).data && (error as any).data.message ? (error as any).data.message : (error as any).data;
+                toast.error(errorMsg, {
                     position: 'top-right',
                 });
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLoading]);
 
     const onSubmit: SubmitHandler<LoginUserRequest> = (data) => {
