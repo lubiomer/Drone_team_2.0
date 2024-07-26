@@ -66,17 +66,17 @@ const Header = () => {
                                 <Nav className="me-auto" navbar>
                                     <NavItem className="nav-item-responsive">
                                         <NavLink onClick={() => { navigate('/shop'); mobileToggle(); }}>
-                                            <button className="btn btn-gray">SHOP</button>
+                                            <button className="btn btn-gray">Shop</button>
                                         </NavLink>
                                     </NavItem>
                                     <NavItem className="nav-item-responsive">
                                         <NavLink onClick={() => navigate('/explore')}>
-                                            <button className="btn btn-gray">EXPLORE</button>
+                                            <button className="btn btn-gray">Explore</button>
                                         </NavLink>
                                     </NavItem>
                                     <NavItem className="nav-item-responsive">
                                         <NavLink onClick={() => navigate('/support')}>
-                                            <button className="btn btn-gray">SUPPORT</button>
+                                            <button className="btn btn-gray">Support</button>
                                         </NavLink>
                                     </NavItem>
                                 </Nav><Nav className="ms-auto" navbar>
@@ -103,37 +103,37 @@ const Header = () => {
                                 <Nav className="me-auto" navbar>
                                     <NavItem className="nav-item-responsive">
                                         <NavLink onClick={() => navigate('/shop')}>
-                                            <button className="btn btn-gray">SHOP</button>
+                                            <button className="btn btn-gray">Shop</button>
                                         </NavLink>
                                     </NavItem>
                                     <NavItem className="nav-item-responsive">
                                         <NavLink onClick={() => navigate('/explore')}>
-                                            <button className="btn btn-gray">EXPLORE</button>
+                                            <button className="btn btn-gray">Explore</button>
                                         </NavLink>
                                     </NavItem>
                                     <NavItem className="nav-item-responsive">
                                         <NavLink onClick={() => navigate('/support')}>
-                                            <button className="btn btn-gray">SUPPORT</button>
+                                            <button className="btn btn-gray">Support</button>
                                         </NavLink>
                                     </NavItem>
                                     <NavItem className="nav-item-responsive">
                                         <NavLink onClick={() => navigate('/purchase')}>
-                                            <button className="btn btn-gray">PURCHASE</button>
+                                            <button className="btn btn-gray">Purchase</button>
                                         </NavLink>
                                     </NavItem>
                                     <NavItem className="nav-item-responsive">
                                         <NavLink onClick={() => navigate('/flight')}>
-                                            <button className="btn btn-gray">LAST FILGHT</button>
+                                            <button className="btn btn-gray">Last Flight</button>
                                         </NavLink>
                                     </NavItem>
                                     <NavItem className="nav-item-responsive">
                                         <NavLink onClick={() => navigate('/myreview')}>
-                                            <button className="btn btn-gray">MY REVIEW</button>
+                                            <button className="btn btn-gray">My Review</button>
                                         </NavLink>
                                     </NavItem>
                                     <NavItem className="nav-item-responsive">
                                         <NavLink onClick={() => navigate('/news')}>
-                                            <button className="btn btn-gray">NEWS</button>
+                                            <button className="btn btn-gray">News</button>
                                         </NavLink>
                                     </NavItem>
                                 </Nav>
@@ -149,7 +149,7 @@ const Header = () => {
                                         </DropdownToggle>
                                         <DropdownMenu end>
                                             <DropdownItem tag={Link} to="/profile">
-                                                <span className="align-middle">PROFILE</span>
+                                                <span className="align-middle">Profile</span>
                                             </DropdownItem>
                                             <DropdownItem onClick={onLogoutHandler}>Log Out</DropdownItem>
                                         </DropdownMenu>
@@ -162,12 +162,12 @@ const Header = () => {
                                 <Nav className="me-auto" navbar>
                                     <NavItem className="nav-item-responsive">
                                         <NavLink onClick={() => navigate('/admin/shop')}>
-                                            <button className="btn btn-gray">SHOP</button>
+                                            <button className="btn btn-gray">Shop</button>
                                         </NavLink>
                                     </NavItem>
                                     <NavItem className="nav-item-responsive">
                                         <NavLink onClick={() => navigate('/admin/users')}>
-                                            <button className="btn btn-gray">USERS</button>
+                                            <button className="btn btn-gray">Users</button>
                                         </NavLink>
                                     </NavItem>
                                 </Nav>
