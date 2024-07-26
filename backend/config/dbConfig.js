@@ -1,6 +1,6 @@
 'use strict';
 
-// Require the MongoClient from the MongoDB driver
+// Require the MongoClient from the MongoDB driver, use mongoose
 const MongoClient = require('mongodb').MongoClient;
 
 // In-memory cache for the database connection
