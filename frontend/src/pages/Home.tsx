@@ -46,7 +46,7 @@ const Home = () => {
             {isLoading ? (<FullScreenLoader />) : (
                 <Container>
                     <div className="drone-tail text-center">
-                        <p className="drone-title mb-4">Hello, Our System</p>
+                        <p className="drone-title mb-4">Hello Mr. Eliav</p>
                         <ul className="mt-4 no-list-style">
                             {/* sign up */}
                             <li>
