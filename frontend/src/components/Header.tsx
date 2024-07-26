@@ -91,8 +91,8 @@ const Header = () => {
 
                                         </DropdownToggle>
                                         <DropdownMenu end>
-                                            <DropdownItem onClick={() => navigate('/login')}>SIGN IN</DropdownItem>
-                                            <DropdownItem onClick={() => navigate('/register')}>SIGN UP</DropdownItem>
+                                            <DropdownItem onClick={() => navigate('/login')}>Sign In</DropdownItem>
+                                            <DropdownItem onClick={() => navigate('/register')}>Sign Up</DropdownItem>
                                         </DropdownMenu>
                                     </UncontrolledDropdown>
                                 </Nav>
@@ -151,7 +151,7 @@ const Header = () => {
                                             <DropdownItem tag={Link} to="/profile">
                                                 <span className="align-middle">PROFILE</span>
                                             </DropdownItem>
-                                            <DropdownItem onClick={onLogoutHandler}>SIGN OUT</DropdownItem>
+                                            <DropdownItem onClick={onLogoutHandler}>Log Out</DropdownItem>
                                         </DropdownMenu>
                                     </UncontrolledDropdown>
                                 </Nav>
@@ -177,7 +177,7 @@ const Header = () => {
                                             <img src={userImg} alt="user" className="user-img" />
                                         </DropdownToggle>
                                         <DropdownMenu end>
-                                            <DropdownItem onClick={onLogoutHandler}>SIGN OUT</DropdownItem>
+                                            <DropdownItem onClick={onLogoutHandler}>Sign Out</DropdownItem>
                                         </DropdownMenu>
                                     </UncontrolledDropdown>
                                 </Nav>
